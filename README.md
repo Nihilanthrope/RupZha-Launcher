@@ -1,8 +1,47 @@
 # RupZha Launcher
 
-A lightweight, open-source Android launcher inspired by Linux desktop workflows, Arch/Hyprland aesthetics, and a fast keyboard-first mindset.
+> A Linux-inspired Android launcher built around the RupZha aesthetic — dark, fast, minimal, and a little different from the usual Android home screen.
 
-> Built by Nihilanthrope. Designed for Android without requiring root.
+<p align="center">
+  <img src="docs/screenshots/home.png" alt="RupZha Launcher home screen" width="320">
+</p>
+
+<p align="center"><strong>RupZha Launcher — desktop-inspired UI, rebuilt for Android.</strong></p>
+
+## What it looks like
+
+RupZha takes cues from **Arch Linux / Hyprland-style desktop workflows** and turns them into a touch-first launcher:
+
+- dark, immersive home screen
+- custom app artwork and icon treatment
+- quick app search and drawer
+- favorites and hidden apps
+- workspace-style surfaces
+- RupZha Control Center
+- media and notification integrations
+- configurable themes, accents, layouts and cards
+- performance-focused caching
+
+## In short
+
+```text
+┌──────────────────────────────┐
+│ RUPZHA                       │
+│                              │
+│        22:41                 │
+│        Wed · 29 Oct          │
+│                              │
+│  ┌──────┐ ┌──────┐ ┌──────┐ │
+│  │ Apps │ │ Media│ │Stats │ │
+│  └──────┘ └──────┘ └──────┘ │
+│                              │
+│  Search apps...              │
+│                              │
+│  ● Favorites   ● Workspace   │
+└──────────────────────────────┘
+```
+
+*The actual UI is visual and touch-first; the diagram above is only a quick idea of the layout.*
 
 ## Features
 
@@ -48,7 +87,7 @@ RupZha Launcher keeps optional integrations behind Android's normal permission s
 
 ## Project status
 
-RupZha Launcher is an active personal open-source project. Expect rapid UI changes, experiments, and occasional rough edges while the launcher evolves.
+RupZha Launcher is an active open-source project. Expect rapid UI changes, experiments, and occasional rough edges while the launcher evolves.
 
 ## Contributing
 
@@ -60,6 +99,8 @@ Issues and pull requests are welcome. If you find a bug, include:
 4. What you expected
 5. What actually happened
 
+See the open issues for planned improvements and ideas.
+
 ## License
 
-MIT License. See `LICENSE`.
+MIT License. See [`LICENSE`](LICENSE).
