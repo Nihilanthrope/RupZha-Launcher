@@ -40,7 +40,7 @@ data class Settings(
     val iconStyle: IconStyle = IconStyle.PAINTED,
     val anim: AnimLevel = AnimLevel.SUBTLE,
     val layout: HomeLayout = HomeLayout.DASHBOARD,
-    val systemWallpaper: Boolean = true,
+    val systemWallpaper: Boolean = false,
     val heroUri: String? = null,
     val favorites: List<String> = emptyList(),
     val hidden: Set<String> = emptySet(),

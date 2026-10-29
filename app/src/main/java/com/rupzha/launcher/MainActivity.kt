@@ -101,6 +101,12 @@ class MainActivity : ComponentActivity() {
 @androidx.compose.runtime.Composable
 private fun RupzhaApp(vm: LauncherViewModel, homePress: Int) {
     val s by vm.settings.collectAsState()
+    // The launcher owns its opaque background. A system wallpaper behind a HOME surface
+    // adds an unnecessary composition pass on ColorOS, so migrate old installs to the
+    // performant default once while keeping the setting available for future opt-in.
+    LaunchedEffect(Unit) {
+        if (s.systemWallpaper) vm.update { it.copy(systemWallpaper = false) }
+    }
     val palette = rupzhaPalette(s)
     val apps by vm.apps.collectAsState()
     val ctx = LocalContext.current

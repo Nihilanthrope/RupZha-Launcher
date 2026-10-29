@@ -90,6 +90,12 @@ The result is intentionally closer to a **personal workspace** than a traditiona
 | JDK | 21 |
 | Gradle | 8.10.2 |
 
+## Download
+
+**Latest optimized APK:** [Download RupZha Launcher v7.0.1](https://github.com/Nihilanthrope/RupZha-Launcher/releases/download/v7.0.1/rupzha-launcher-v7.0.1.apk)
+
+This release contains the same performance build tested on the device: reduced GPU layer usage in subtle animation mode and no unnecessary system-wallpaper composition behind the launcher.
+
 ## Build from Source
 
 Clone the repository and build the debug APK:

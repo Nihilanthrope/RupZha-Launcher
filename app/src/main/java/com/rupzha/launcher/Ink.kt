@@ -129,22 +129,33 @@ fun Modifier.pressable(
     val src = remember { MutableInteractionSource() }
     val pressed by src.collectIsPressedAsState()
     val haptic = LocalHapticFeedback.current
-    val scale by animateFloatAsState(
-        targetValue = if (pressed && anim != AnimLevel.OFF) 0.92f else 1f,
-        animationSpec = spring(
-            dampingRatio = if (anim == AnimLevel.LIVELY) Spring.DampingRatioMediumBouncy else Spring.DampingRatioNoBouncy,
-            stiffness = Spring.StiffnessMedium,
-        ),
-        label = "press",
-    )
-    return this
-        .graphicsLayer { scaleX = scale; scaleY = scale }
-        .combinedClickable(
-            interactionSource = src,
-            indication = null,
-            onLongClick = onLongClick?.let { lc -> { haptic.performHapticFeedback(HapticFeedbackType.LongPress); lc() } },
-            onClick = onClick,
+    // Subtle mode deliberately avoids a graphics layer on every card/tile. A graphicsLayer
+    // is useful for a pressed scale animation, but keeping one on dozens of launcher tiles
+    // makes scrolling and app-drawer flings noticeably more expensive on mobile GPUs.
+    if (anim == AnimLevel.LIVELY) {
+        val scale by animateFloatAsState(
+            targetValue = if (pressed) 0.92f else 1f,
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessMedium,
+            ),
+            label = "press",
         )
+        return this
+            .graphicsLayer { scaleX = scale; scaleY = scale }
+            .combinedClickable(
+                interactionSource = src,
+                indication = null,
+                onLongClick = onLongClick?.let { lc -> { haptic.performHapticFeedback(HapticFeedbackType.LongPress); lc() } },
+                onClick = onClick,
+            )
+    }
+    return this.combinedClickable(
+        interactionSource = src,
+        indication = null,
+        onLongClick = onLongClick?.let { lc -> { haptic.performHapticFeedback(HapticFeedbackType.LongPress); lc() } },
+        onClick = onClick,
+    )
 }
 
 // ---------------------------------------------------------------------------------------------
