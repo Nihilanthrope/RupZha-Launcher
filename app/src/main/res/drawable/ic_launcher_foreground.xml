@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- chunky peach "R" with dark ink outline -->
+    <path android:fillColor="#0B1030" android:pathData="M34,28 H60 Q76,28 76,43 Q76,54 66,58 L78,82 H64 L54,60 H47 V82 H34z" />
+    <path android:fillColor="#FFB59A" android:pathData="M38,32 H59 Q71,32 71,43 Q71,52 59,52 H43 V78 H38z M43,37 V47 H58 Q66,47 66,42 Q66,37 58,37z" />
+    <path android:fillColor="#FFB59A" android:pathData="M52,54 H58 L70,78 H63z" />
+    <path android:fillColor="#F6EBDD" android:pathData="M84,26 l2,5 5,2 -5,2 -2,5 -2,-5 -5,-2 5,-2z" />
+</vector>

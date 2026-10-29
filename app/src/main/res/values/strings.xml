@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">RUPZHA Launcher</string>
+    <string name="a11y_desc">Lets RUPZHA Launcher take screenshots, lock the screen and open the notification shade from its control center. It does not read your screen.</string>
+</resources>
