@@ -2,46 +2,37 @@
 
 > A Linux-inspired Android launcher built around the RupZha aesthetic — dark, fast, minimal, and a little different from the usual Android home screen.
 
-<p align="center">
-  <img src="docs/screenshots/home.png" alt="RupZha Launcher home screen" width="320">
-</p>
-
 <p align="center"><strong>RupZha Launcher — desktop-inspired UI, rebuilt for Android.</strong></p>
 
-## What it looks like
+## UI preview
 
-RupZha takes cues from **Arch Linux / Hyprland-style desktop workflows** and turns them into a touch-first launcher:
+The launcher is split into three main surfaces. These are **full-device screenshots**, captured directly from the running launcher.
 
-- dark, immersive home screen
-- custom app artwork and icon treatment
-- quick app search and drawer
-- favorites and hidden apps
-- workspace-style surfaces
-- RupZha Control Center
-- media and notification integrations
-- configurable themes, accents, layouts and cards
-- performance-focused caching
+### 1. Home — your daily workspace
 
-## In short
+The Home surface puts the important stuff first: time, date, artwork, quick-launch apps, media controls, battery/status information, and the main navigation.
 
-```text
-┌──────────────────────────────┐
-│ RUPZHA                       │
-│                              │
-│        22:41                 │
-│        Wed · 29 Oct          │
-│                              │
-│  ┌──────┐ ┌──────┐ ┌──────┐ │
-│  │ Apps │ │ Media│ │Stats │ │
-│  └──────┘ └──────┘ └──────┘ │
-│                              │
-│  Search apps...              │
-│                              │
-│  ● Favorites   ● Workspace   │
-└──────────────────────────────┘
-```
+<p align="center">
+  <img src="docs/screenshots/home-full.png" alt="RupZha Launcher full Home screen" width="360">
+</p>
 
-*The actual UI is visual and touch-first; the diagram above is only a quick idea of the layout.*
+### 2. Applications — browse everything
+
+The Applications surface is the full app drawer. Search by name, filter by category, and launch apps from RupZha's custom illustrated icon grid.
+
+<p align="center">
+  <img src="docs/screenshots/apps-full.png" alt="RupZha Launcher full Applications screen" width="360">
+</p>
+
+### 3. Command Center — search and run actions
+
+The Command Center turns the launcher into a quick command interface. Search for apps, battery information, Wi-Fi, Bluetooth, system settings, display settings, and other supported actions from one place.
+
+<p align="center">
+  <img src="docs/screenshots/search-full.png" alt="RupZha Launcher full Command Center screen" width="360">
+</p>
+
+RupZha takes cues from **Arch Linux / Hyprland-style desktop workflows** and turns them into a touch-first launcher: dark, immersive, keyboard-friendly, fast, and intentionally unlike a stock Android home screen.
 
 ## Features
 
