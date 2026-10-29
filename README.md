@@ -46,6 +46,9 @@ RupZha takes cues from **Arch Linux / Hyprland-style desktop workflows** and tur
 - Accessibility-powered launcher actions
 - Immersive fullscreen home experience
 - Performance-focused icon and wallpaper caching
+- RupZha illustrated icon system for the full installed app drawer
+- Recognizable app artwork with a consistent hand-drawn / paper-and-ink treatment
+- Dedicated artwork for popular apps plus stylized fallback treatment for unknown apps
 - No analytics or tracking built into the launcher
 
 ## Requirements
@@ -78,7 +81,9 @@ RupZha Launcher keeps optional integrations behind Android's normal permission s
 
 ## Project status
 
-RupZha Launcher is an active open-source project. Expect rapid UI changes, experiments, and occasional rough edges while the launcher evolves.
+**Paused for now.** The current public build is usable, but development is intentionally parked while other RupZha work takes priority. The repository remains open for future improvements, bug fixes, and UI experiments.
+
+The current icon system keeps the original RupZha illustrated identity while extending it across the installed app drawer, so unknown apps do not fall back to plain letter-only icons.
 
 ## Contributing
 
