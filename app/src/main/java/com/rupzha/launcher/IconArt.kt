@@ -1,5 +1,9 @@
 package com.rupzha.launcher
 
+import android.content.ComponentName
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas as AndroidCanvas
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.util.LruCache
@@ -14,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.ImageBitmapConfig
 import androidx.compose.ui.graphics.Path
@@ -354,10 +359,49 @@ private fun IconImage(spec: IconSpec, size: Dp, modifier: Modifier) {
     }
 }
 
+private object SystemIconCache {
+    private val lru = object : LruCache<String, ImageBitmap>(8 * 1024 * 1024) {
+        override fun sizeOf(key: String, value: ImageBitmap) = value.width * value.height * 4
+    }
+
+    fun peek(key: String): ImageBitmap? = lru.get(key)
+
+    fun load(context: Context, app: AppEntry, px: Int): ImageBitmap? {
+        val key = "${app.key}:$px"
+        lru.get(key)?.let { return it }
+        val drawable = runCatching {
+            context.packageManager.getActivityIcon(ComponentName(app.pkg, app.activity))
+        }.getOrElse {
+            runCatching { context.packageManager.getApplicationIcon(app.pkg) }.getOrNull()
+        } ?: return null
+
+        val side = px.coerceIn(96, 192)
+        val bitmap = Bitmap.createBitmap(side, side, Bitmap.Config.ARGB_8888)
+        val canvas = AndroidCanvas(bitmap)
+        drawable.setBounds(0, 0, side, side)
+        drawable.draw(canvas)
+        val image = bitmap.asImageBitmap()
+        lru.put(key, image)
+        return image
+    }
+}
+
 @Composable
 fun AppIcon(app: AppEntry, size: Dp, style: IconStyle, modifier: Modifier = Modifier) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val px = bucketPx(with(LocalDensity.current) { size.roundToPx() })
-    IconImage(IconCache.specFor(app, style, px), size, modifier)
+    val key = "${app.key}:$px"
+    val systemIcon by produceState(SystemIconCache.peek(key), key) {
+        if (value == null) value = withContext(Dispatchers.IO) { SystemIconCache.load(context, app, px) }
+    }
+    if (systemIcon != null) {
+        Box(modifier.size(size)) {
+            Image(systemIcon!!, contentDescription = app.label, modifier = Modifier.fillMaxSize())
+        }
+    } else {
+        // Only use the illustrated fallback if Android cannot provide an app icon.
+        IconImage(IconCache.specFor(app, style, px), size, modifier)
+    }
 }
 
 @Composable
