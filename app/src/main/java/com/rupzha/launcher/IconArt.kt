@@ -366,8 +366,13 @@ private object SystemIconCache {
 
     fun peek(key: String): ImageBitmap? = lru.get(key)
 
-    fun load(context: Context, app: AppEntry, px: Int): ImageBitmap? {
-        val key = "${app.key}:$px"
+    /**
+     * Loads the real Android icon only as source material, then wraps it in the RUPZHA
+     * illustrated treatment. This keeps unknown apps recognizable without breaking the
+     * hand-drawn visual language of the launcher.
+     */
+    fun loadStylized(context: Context, app: AppEntry, px: Int, style: IconStyle): ImageBitmap? {
+        val key = "${app.key}:$px:$style"
         lru.get(key)?.let { return it }
         val drawable = runCatching {
             context.packageManager.getActivityIcon(ComponentName(app.pkg, app.activity))
@@ -378,8 +383,49 @@ private object SystemIconCache {
         val side = px.coerceIn(96, 192)
         val bitmap = Bitmap.createBitmap(side, side, Bitmap.Config.ARGB_8888)
         val canvas = AndroidCanvas(bitmap)
-        drawable.setBounds(0, 0, side, side)
+        val density = side / 100f
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val seed = app.pkg.hashCode()
+        val wobble = ((seed and 7) - 3) * density * 0.35f
+        val left = 9f * density + wobble
+        val top = 9f * density - wobble
+        val right = 91f * density + wobble
+        val bottom = 91f * density - wobble
+        val radius = 22f * density
+
+        // RUPZHA paper/shadow base.
+        paint.style = Paint.Style.FILL
+        paint.color = android.graphics.Color.argb(150, 11, 16, 48)
+        canvas.drawRoundRect(left + 2.5f * density, top + 3f * density, right + 2.5f * density, bottom + 3f * density, radius, radius, paint)
+        paint.color = android.graphics.Color.rgb(245, 243, 236)
+        canvas.drawRoundRect(left, top, right, bottom, radius, radius, paint)
+
+        // Slightly rotated source icon gives it the loose, hand-placed RUPZHA feel.
+        val iconInset = if (style == IconStyle.FLAT) 15f else 18f
+        val il = iconInset * density
+        val iconRect = android.graphics.RectF(il, il, side - il, side - il)
+        canvas.save()
+        canvas.rotate(((seed % 7) - 3) * 0.7f, side / 2f, side / 2f)
+        drawable.setBounds(iconRect.left.toInt(), iconRect.top.toInt(), iconRect.right.toInt(), iconRect.bottom.toInt())
         drawable.draw(canvas)
+        canvas.restore()
+
+        // Thick ink outline and a few restrained pencil marks match the original icon pack.
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = if (style == IconStyle.SKETCH) 5f * density else 4f * density
+        paint.strokeCap = Paint.Cap.ROUND
+        paint.color = android.graphics.Color.rgb(11, 16, 48)
+        canvas.drawRoundRect(left, top, right, bottom, radius, radius, paint)
+        if (style != IconStyle.FLAT) {
+            paint.strokeWidth = 1.3f * density
+            paint.color = android.graphics.Color.argb(48, 11, 16, 48)
+            var x = left - 18f * density
+            while (x < right) {
+                canvas.drawLine(x, bottom, x + 22f * density, top, paint)
+                x += 7f * density
+            }
+        }
+
         val image = bitmap.asImageBitmap()
         lru.put(key, image)
         return image
@@ -390,17 +436,25 @@ private object SystemIconCache {
 fun AppIcon(app: AppEntry, size: Dp, style: IconStyle, modifier: Modifier = Modifier) {
     val context = androidx.compose.ui.platform.LocalContext.current
     val px = bucketPx(with(LocalDensity.current) { size.roundToPx() })
-    val key = "${app.key}:$px"
+    val spec = IconCache.specFor(app, style, px)
+    val knownArt = spec.art !in fallbackArts
+    if (knownArt) {
+        // Preserve the original RUPZHA artwork for apps that already have dedicated art.
+        IconImage(spec, size, modifier)
+        return
+    }
+
+    val key = "${app.key}:$px:$style"
     val systemIcon by produceState(SystemIconCache.peek(key), key) {
-        if (value == null) value = withContext(Dispatchers.IO) { SystemIconCache.load(context, app, px) }
+        if (value == null) value = withContext(Dispatchers.IO) { SystemIconCache.loadStylized(context, app, px, style) }
     }
     if (systemIcon != null) {
         Box(modifier.size(size)) {
             Image(systemIcon!!, contentDescription = app.label, modifier = Modifier.fillMaxSize())
         }
     } else {
-        // Only use the illustrated fallback if Android cannot provide an app icon.
-        IconImage(IconCache.specFor(app, style, px), size, modifier)
+        // Last-resort illustrated fallback. It is deterministic and no longer depends on letters.
+        IconImage(spec.copy(letter = ""), size, modifier)
     }
 }
 
